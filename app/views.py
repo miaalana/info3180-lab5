@@ -9,7 +9,7 @@ from app import app
 from flask import render_template, request, jsonify, send_file
 import os
 from app.models import Movies
-
+from app.forms import MovieForm
 
 ###
 # Routing for your application.
@@ -23,6 +23,31 @@ def index():
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+@app.route('/api/v1/movies',methods=['POST'])
+def movies():
+    mform = MovieForm()
+    
+    if mform.validate_on_submit():
+        title = mform.title.data
+        description = mform.description.data
+        poster = mform.poster.data
+        
+        movie = Movie(title=title, description=description, poster=poster.filename)
+        db.sessions.add(movie)
+        db.session.commit()
+        
+        poster.save(os.path.join(app.config['UPLOAD FOLDER'],poster.filename))
+        response = {
+        "message":"Movie Successfully added",
+        "title":title,
+        "poster":poster.filename,
+        "description":description
+        }
+        return jsonify(response),201
+    else:
+        errors = form_errors(form)
+        eresponse = {"errors":errors}
+        return jsonify(eresponse),400
 
 # Here we define a function to collect form errors from Flask-WTF
 # which we can later use
