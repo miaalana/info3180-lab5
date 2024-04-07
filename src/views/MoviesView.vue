@@ -22,7 +22,9 @@ import { ref, onMounted } from "vue";
 let movies = ref([]);
 
 function fetchMovies(){
-    fetch("/api/v1/movies")
+    fetch("/api/v1/movies",{
+        method: 'GET',
+    })
     .then(function (response){
         return response.json();
     })
