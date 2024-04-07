@@ -67,7 +67,7 @@ def form_errors(form):
 
 @app.route('/api/v1/csrf-token',methods=['GET'])
 def get_csrf():
-    return jsonify({'csrf_token':generate_csrf})
+    return jsonify({'csrf_token':generate_csrf()})
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
