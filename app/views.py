@@ -5,11 +5,12 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app
+from app import app,db
 from flask import render_template, request, jsonify, send_file
 import os
 from app.models import Movies
 from app.forms import MovieForm
+from flask_wtf.csrf import generate_csrf
 
 ###
 # Routing for your application.
@@ -32,11 +33,11 @@ def movies():
         description = mform.description.data
         poster = mform.poster.data
         
-        movie = Movie(title=title, description=description, poster=poster.filename)
-        db.sessions.add(movie)
+        movie = Movies(title=title, description=description, poster=poster.filename)
+        db.session.add(movie)
         db.session.commit()
         
-        poster.save(os.path.join(app.config['UPLOAD FOLDER'],poster.filename))
+        poster.save(os.path.join(app.config['UPLOAD_FOLDER'],poster.filename))
         response = {
         "message":"Movie Successfully added",
         "title":title,
@@ -45,7 +46,7 @@ def movies():
         }
         return jsonify(response),201
     else:
-        errors = form_errors(form)
+        errors = form_errors(mform)
         eresponse = {"errors":errors}
         return jsonify(eresponse),400
 
@@ -63,6 +64,10 @@ def form_errors(form):
             error_messages.append(message)
 
     return error_messages
+
+@app.route('/api/v1/csrf-token',methods=['GET'])
+def get_csrf():
+    return jsonify({'csrf_token':generate_csrf})
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

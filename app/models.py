@@ -8,3 +8,6 @@ class Movies(db.Model):
     description = db.Column(db.Text, nullable=False)
     poster = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return f'<Movie {self.title}>'

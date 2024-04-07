@@ -1,6 +1,7 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      
       <div class="container-fluid">
         <a class="navbar-brand" href="/">VueJS with Flask</a>
         <button
@@ -21,6 +22,9 @@
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link" to="/about">About</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/movies/create">Add Movie</RouterLink>
             </li>
           </ul>
         </div>
